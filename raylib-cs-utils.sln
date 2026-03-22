@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "raylib-cs-utils", "raylib-cs-utils\raylib-cs-utils.csproj", "{80711684-F35B-4AB6-907A-175D50A518BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{80711684-F35B-4AB6-907A-175D50A518BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80711684-F35B-4AB6-907A-175D50A518BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80711684-F35B-4AB6-907A-175D50A518BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80711684-F35B-4AB6-907A-175D50A518BB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
