@@ -31,37 +31,89 @@ public class SpatialGrid<T> where T: ISpatialEntity
         {
             for (int y = 0; y < _gridHeight; y++)
             {
-                _cells[x,y].Clear();
+                 _cells[x, y].Clear();
             }
         }
 
         foreach (var entity in allEntities)
         {
-            int gridX = (int)(entity.Position.X /  _cellSize);
-            int gridY = (int)(entity.Position.Y / _cellSize);
-
-            if (isInside(gridX, gridY))
-            {
-                _cells[gridX, gridY].Add(entity);
-            }
+            Insert(entity);
         }
     }
 
-    public List<T>? GetEntitiesinCell(Vector2 position)
+    private void Insert(T entity)
+    {
+        GetEntityCellBounds(entity, out int minX, out int maxX, out int minY, out int maxY);
+
+        for (int x = minX; x <= maxX; x++)
+        {
+            for (int y = minY; y <= maxY; y++)
+            {
+                if (IsInside(x, y))
+                    _cells[x, y].Add(entity);
+            }
+        }
+    }
+    
+    public void Remove(T entity)
+    {
+        GetEntityCellBounds(entity, out int minX, out int maxX, out int minY, out int maxY);
+
+        for (int x = minX; x <= maxX; x++)
+        {
+            for (int y = minY; y <= maxY; y++)
+            {
+                if (IsInside(x, y))
+                    _cells[x, y].Remove(entity);
+            }
+        }
+    }
+    
+    public List<T>? GetEntitiesInCell(Vector2 position)
     {
         int gridX = (int)(position.X / _cellSize);
         int gridY = (int)(position.Y / _cellSize);
 
-        if (isInside(gridX, gridY))
+        if (IsInside(gridX, gridY))
         {
             return _cells[gridX, gridY];
         }
 
         return null;
     }
+    
+    public IEnumerable<T> GetNearby(Vector2 position, int radiusCells = 1)
+    {
+        int centerX = (int)(position.X / _cellSize);
+        int centerY = (int)(position.Y / _cellSize);
 
-    private bool isInside(int gridX, int gridY)
+        var seen = new HashSet<T>();
+
+        for (int x = centerX - radiusCells; x <= centerX + radiusCells; x++)
+        {
+            for (int y = centerY - radiusCells; y <= centerY + radiusCells; y++)
+            {
+                if (IsInside(x, y))
+                {
+                    foreach (var entity in _cells[x, y])
+                    {
+                        if (seen.Add(entity)) yield return entity;
+                    }
+                }
+            }
+        }
+    }
+    
+    private bool IsInside(int gridX, int gridY)
     {
         return gridX >= 0 && gridX < _gridWidth && gridY >= 0 && gridY < _gridHeight;
+    }
+    
+    private void GetEntityCellBounds(T entity, out int minX, out int maxX, out int minY, out int maxY)
+    {
+        minX = (int)((entity.Position.X - entity.Radius) / _cellSize);
+        maxX = (int)((entity.Position.X + entity.Radius) / _cellSize);
+        minY = (int)((entity.Position.Y - entity.Radius) / _cellSize);
+        maxY = (int)((entity.Position.Y + entity.Radius) / _cellSize);
     }
 }
